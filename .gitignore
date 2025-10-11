@@ -104,3 +104,6 @@ InitTestScene*.unity*
 /Logs/
 /Build/
 /Obj/
+
+.DS_Store
+*.exr
