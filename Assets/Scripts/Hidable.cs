@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem;   // 👈 Required for Keyboard.current
+using UnityEngine.InputSystem;
 
 public class Hideable : MonoBehaviour
 {
