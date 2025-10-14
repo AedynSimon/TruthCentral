@@ -3582,7 +3582,7 @@ MonoBehaviour:
   fogColorInside: {r: 0.02, g: 0.02, b: 0.02, a: 1}
   fogDensityInside: 0.175
   fogColorOutside: {r: 0.066037714, g: 0.066037714, b: 0.066037714, a: 1}
-  fogDensityOutside: 0.025
+  fogDensityOutside: 0.05
   transitionSpeed: 0.25
 --- !u!65 &1502973961
 BoxCollider:
