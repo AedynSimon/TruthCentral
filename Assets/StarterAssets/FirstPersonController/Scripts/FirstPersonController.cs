@@ -64,7 +64,18 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
-	
+		// Footstep Audio Additions
+		[Header("Footstep Audio")]
+		public AudioSource audioSource;
+		public AudioClip[] footstepSounds;
+		public AudioClip jumpSound;
+		public AudioClip landSound;
+		public float walkStepInterval = 0.6f;
+		public float runStepInterval = 0.4f;
+
+		private float stepCycle;
+		private bool wasGrounded;
+
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
 #endif
@@ -78,11 +89,11 @@ namespace StarterAssets
 		{
 			get
 			{
-				#if ENABLE_INPUT_SYSTEM
+#if ENABLE_INPUT_SYSTEM
 				return _playerInput.currentControlScheme == "KeyboardMouse";
-				#else
+#else
 				return false;
-				#endif
+#endif
 			}
 		}
 
@@ -115,6 +126,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			HandleFootsteps();
 		}
 
 		private void LateUpdate()
@@ -136,7 +148,7 @@ namespace StarterAssets
 			{
 				//Don't multiply mouse input by Time.deltaTime
 				float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-				
+
 				_cinemachineTargetPitch += _input.look.y * RotationSpeed * deltaTimeMultiplier;
 				_rotationVelocity = _input.look.x * RotationSpeed * deltaTimeMultiplier;
 
@@ -263,6 +275,55 @@ namespace StarterAssets
 
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+		}
+
+		// Footstep Audio Methods
+		private void HandleFootsteps()
+		{
+			bool isGrounded = Grounded;
+			bool isMoving = _input.move.magnitude > 0.1f && _controller.velocity.magnitude > 0.1f;
+
+			if (isGrounded && isMoving)
+			{
+				stepCycle += Time.deltaTime;
+				float interval = _input.sprint ? runStepInterval : walkStepInterval;
+
+				if (stepCycle > interval)
+				{
+					PlayFootstep();
+					stepCycle = 0f;
+				}
+			}
+
+			// Jump and landing detection
+			if (!wasGrounded && isGrounded)
+			{
+				PlaySound(landSound);
+			}
+			else if (wasGrounded && !isGrounded)
+			{
+				PlaySound(jumpSound);
+			}
+
+			wasGrounded = isGrounded;
+		}
+
+		private void PlayFootstep()
+		{
+			if (footstepSounds == null || footstepSounds.Length == 0) return;
+
+			AudioClip clip = footstepSounds[Random.Range(0, footstepSounds.Length)];
+			audioSource.pitch = Random.Range(0.9f, 1.1f);
+			audioSource.PlayOneShot(clip);
+		}
+
+		private void PlaySound(AudioClip clip)
+		{
+			if (clip != null)
+			{
+				audioSource.pitch = 1f;
+				audioSource.PlayOneShot(clip);
+			}
 		}
 	}
 }
