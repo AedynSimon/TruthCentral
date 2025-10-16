@@ -19,7 +19,7 @@ public class WinZone : MonoBehaviour
             {
                 Debug.Log("You still need to collect all the files!");
                 if (PickupUI.instance != null)
-                    PickupUI.instance.ShowMessage("Get all 5 Epstien files!");
+                    PickupUI.instance.ShowMessage("Get all 5 Epstein files!");
             }
         }
     }
