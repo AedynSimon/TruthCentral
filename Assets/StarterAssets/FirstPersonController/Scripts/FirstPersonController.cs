@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using System.Linq; // for FindObjectsOfType
 #endif
 
 namespace StarterAssets
@@ -76,6 +77,8 @@ namespace StarterAssets
 		private float stepCycle;
 		private bool wasGrounded;
 
+		private MonsterAI[] monsters;
+
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
 #endif
@@ -119,6 +122,7 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+			monsters = Object.FindObjectsByType<MonsterAI>(FindObjectsSortMode.None);
 		}
 
 		private void Update()
@@ -287,7 +291,6 @@ namespace StarterAssets
 			{
 				stepCycle += Time.deltaTime;
 				float interval = _input.sprint ? runStepInterval : walkStepInterval;
-
 				if (stepCycle > interval)
 				{
 					PlayFootstep();
@@ -299,6 +302,7 @@ namespace StarterAssets
 			if (!wasGrounded && isGrounded)
 			{
 				PlaySound(landSound);
+				MakeLandingNoise();
 			}
 			else if (wasGrounded && !isGrounded)
 			{
@@ -306,6 +310,21 @@ namespace StarterAssets
 			}
 
 			wasGrounded = isGrounded;
+		}
+
+		private void MakeLandingNoise()
+		{
+			// Alert all monsters nearby
+			foreach (MonsterAI monster in monsters)
+			{
+				float distance = Vector3.Distance(monster.transform.position, transform.position);
+				if (distance < 20f) // You can tweak this hearing range
+				{
+					monster.HearNoise(transform.position);
+				}
+			}
+
+			Debug.Log("<color=yellow>[Player]</color> Landed! Monsters within range have been alerted.");
 		}
 
 		private void PlayFootstep()
