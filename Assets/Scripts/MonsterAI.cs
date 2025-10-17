@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class MonsterAI : MonoBehaviour
 {
@@ -300,7 +301,8 @@ public class MonsterAI : MonoBehaviour
         yield return new WaitForSeconds(jumpscareDuration);
 
         // TODO: Transition to game over screen or reset
-        Debug.Log("<color=red>[MonsterAI]</color> Jumpscare finished! Implement Game Over logic here.");
+        Debug.Log("<color=red>[MonsterAI]</color> Jumpscare finished! Game over, returning to menu.");
+        FindFirstObjectByType<GameOver>().TriggerGameOver();
     }
     private System.Collections.IEnumerator CameraShake(Camera cam, float duration, float magnitude)
     {
