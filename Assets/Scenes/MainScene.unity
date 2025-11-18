@@ -18686,6 +18686,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2112376224}
     - target: {fileID: 6120137154481705339, guid: dff0973d8e147d64580c9a82eecd427f, type: 3}
+      propertyPath: sightRange
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120137154481705339, guid: dff0973d8e147d64580c9a82eecd427f, type: 3}
+      propertyPath: fieldOfView
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 6120137154481705339, guid: dff0973d8e147d64580c9a82eecd427f, type: 3}
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 1696691098}
